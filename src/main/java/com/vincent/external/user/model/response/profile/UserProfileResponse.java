@@ -30,7 +30,7 @@ public class UserProfileResponse {
     private String aboutMe;
 
     /** 头像（各种尺寸） */
-    private List<UserAvatar> avatars;
+    private List<UserAvatarResponse> avatars;
 
     /** 所用语言 */
     private List<String> languages;

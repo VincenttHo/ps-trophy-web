@@ -28,10 +28,10 @@ import java.util.Map;
 @Service
 public class TrophyApi {
 
-    @Value("${psn.api.url.trophy-summary:https://m.np.playstation.net/api/trophy/v1/users/%s/trophySummary}")
+    @Value("${psn.api.trophy.url.trophy-summary}")
     private String trophySummaryApiUrl;
 
-    @Value("${psn.api.url.trophy-list:https://m.np.playstation.net/api/trophy/v1/users/%s/trophyTitles}")
+    @Value("${psn.api.trophy.url.trophy-list}")
     private String trophyListApiUrl;
 
     @Autowired

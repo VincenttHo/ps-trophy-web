@@ -1,4 +1,4 @@
-package com.vincent.external.user.model.response.profile;
+package com.vincent.api.trophy.model;
 
 import lombok.Data;
 
@@ -17,12 +17,18 @@ import lombok.Data;
  * @date 2022-03-26
  */
 @Data
-public class UserAvatar {
+public class TrophyNum {
 
-    /** 尺寸（s-小，m-中，l-大，xl-超大） */
-    private String size;
+    /** 铜杯个数 */
+    private Integer bronze;
 
-    /** 图片地址 */
-    private String url;
+    /** 银杯个数 */
+    private Integer silver;
+
+    /** 金杯个数 */
+    private Integer gold;
+
+    /** 白金杯个数 */
+    private Integer platinum;
 
 }

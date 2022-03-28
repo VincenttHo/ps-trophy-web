@@ -1,5 +1,6 @@
 package com.vincent.external.trophy.model;
 
+import com.vincent.api.trophy.model.TrophyNum;
 import lombok.Data;
 
 import java.util.Date;
@@ -19,7 +20,7 @@ import java.util.Date;
  * @date 2022-03-26
  */
 @Data
-public class TrophyTitle {
+public class TrophyTitleResponse {
 
     /** npServiceName */
     private String npServiceName;

@@ -2,7 +2,7 @@ package com.vincent.api.user.service;
 
 import com.vincent.api.user.dao.UserDao;
 import com.vincent.api.user.model.UserInfoDTO;
-import com.vincent.external.user.api.UserInfoApi;
+import com.vincent.external.user.api.UserApi;
 import com.vincent.external.user.model.response.info.UserInfoResponse;
 import com.vincent.external.user.model.response.profile.UserProfileResponse;
 import org.springframework.beans.BeanUtils;
@@ -30,7 +30,7 @@ import java.util.Optional;
 public class UserService {
 
     @Autowired
-    private UserInfoApi userInfoApi;
+    private UserApi userInfoApi;
 
     @Autowired
     private UserDao userDao;

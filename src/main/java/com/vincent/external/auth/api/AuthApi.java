@@ -33,13 +33,13 @@ import org.springframework.util.ObjectUtils;
 @Service
 public class AuthApi {
 
-    @Value("${psn.api.url.auth-code:https://ca.account.sony.com/api/authz/v3/oauth/authorize?access_type=offline&client_id=ac8d161a-d966-4728-b0ea-ffec22f69edc&redirect_uri=com.playstation.PlayStationApp%3A%2F%2Fredirect&response_type=code&scope=psn%3Amobile.v1%20psn%3Aclientapp}")
+    @Value("${psn.api.auth.url.auth-code}")
     private String authCodeApiUrl;
 
-    @Value("${psn.api.url.token:https://ca.account.sony.com/api/authz/v3/oauth/token}")
+    @Value("${psn.api.auth.url.token}")
     private String tokenApiUrl;
 
-    @Value("${psn.api.npsso:7SWoAEfFlRn8w65bwcCpdepmU03ZYcMSGJE0Jq9QD099vnKkUV7gVj1zUhUBwseh}")
+    @Value("${psn.api.auth.npsso}")
     private String npsso;
 
     /**

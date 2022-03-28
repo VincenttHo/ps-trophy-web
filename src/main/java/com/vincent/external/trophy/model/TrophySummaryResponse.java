@@ -1,5 +1,6 @@
 package com.vincent.external.trophy.model;
 
+import com.vincent.api.trophy.model.TrophyNum;
 import lombok.Data;
 
 /**

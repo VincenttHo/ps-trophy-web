@@ -31,12 +31,12 @@ import java.util.Map;
  */
 @Slf4j
 @Service
-public class UserInfoApi {
+public class UserApi {
 
-    @Value("${psn.api.url.search-user:https://m.np.playstation.net/api/search/v1/universalSearch}")
+    @Value("${psn.api.user.url.search-user}")
     private String searchUserApiUrl;
 
-    @Value("${psn.api.url.search-user:https://m.np.playstation.net/api/userProfile/v1/internal/users/%s/profiles}")
+    @Value("${psn.api.user.url.user-profile}")
     private String userProfileApiUrl;
 
     @Autowired
