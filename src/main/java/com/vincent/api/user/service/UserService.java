@@ -1,7 +1,9 @@
 package com.vincent.api.user.service;
 
 import com.vincent.api.user.dao.UserDao;
+import com.vincent.api.user.dao.UserProfileDao;
 import com.vincent.api.user.model.UserInfoDTO;
+import com.vincent.api.user.model.UserProfileDTO;
 import com.vincent.external.user.api.UserInfoApi;
 import com.vincent.external.user.model.response.info.UserInfoResponse;
 import com.vincent.external.user.model.response.profile.UserProfileResponse;
@@ -35,6 +37,9 @@ public class UserService {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private UserProfileDao userProfileDao;
+
     /**
      * <p>获取用户信息</p>
      * @author VincentHo
@@ -42,27 +47,55 @@ public class UserService {
      * @param psnId
      * @return com.vincent.api.user.model.UserInfoDTO
      */
-    public UserInfoDTO queryUserInfo(@PathVariable("psnId") String psnId) {
+    public UserInfoDTO queryUserInfo(String psnId) {
 
-        // TODO 优先数据库获取
-        Optional<UserInfoDTO> userInfoOptional = userDao.findById(psnId);
-        UserInfoDTO result = null;
-        if(userInfoOptional.isPresent()) {
-            result = userInfoOptional.get();
-        }
+        return userDao.findByOnlineId(psnId).orElseGet(() -> getUserInfoByApi(psnId));
 
-        if(result == null) {
-            UserInfoResponse userInfoResponse = userInfoApi.getUserInfo(psnId);
-            UserProfileResponse userProfileResponse = userInfoApi.getUserProfile(userInfoResponse.getAccountId());
+    }
 
-            result = new UserInfoDTO();
-            BeanUtils.copyProperties(userProfileResponse, result);
-            BeanUtils.copyProperties(userInfoResponse, result);
+    /**
+     * <p>通过api获取用户信息</p>
+     * @author VincentHo
+     * @date 2022/4/4
+     * @param psnId
+     * @return com.vincent.api.user.model.UserInfoDTO
+     */
+    private UserInfoDTO getUserInfoByApi(String psnId) {
+        UserInfoResponse userInfoResponse = userInfoApi.getUserInfo(psnId);
 
-            userDao.save(result);
+        UserInfoDTO result = new UserInfoDTO();
+        BeanUtils.copyProperties(userInfoResponse, result);
 
-        }
+        userDao.save(result);
+        return result;
+    }
 
+    /**
+     * <p>查询用户简介信息</p>
+     * @author VincentHo
+     * @date 2022/4/4
+     * @param accountId
+     * @return com.vincent.api.user.model.UserProfileDTO
+     */
+    public UserProfileDTO queryUserProfile(String accountId) {
+
+        return userProfileDao.findById(accountId).orElseGet(() -> this.getUserProfileByApi(accountId));
+
+    }
+
+    /**
+     * <p>通过api获取用户简介信息</p>
+     * @author VincentHo
+     * @date 2022/4/4
+     * @param accountId
+     * @return com.vincent.api.user.model.UserProfileDTO
+     */
+    private UserProfileDTO getUserProfileByApi(String accountId) {
+        UserProfileResponse userProfileResponse = userInfoApi.getUserProfile(accountId);
+        UserProfileDTO result = new UserProfileDTO();
+        result.setAccountId(accountId);
+        BeanUtils.copyProperties(userProfileResponse, result);
+        userProfileDao.save(result);
         return result;
     }
 

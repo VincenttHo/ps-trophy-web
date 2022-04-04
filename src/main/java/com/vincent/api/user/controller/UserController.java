@@ -40,5 +40,11 @@ public class UserController {
         return userService.queryUserInfo(psnId);
     }
 
+    @GetMapping(value = "/profile/{accountId}")
+    @Operation(summary = "查询用户简介信息")
+    public UserProfileDTO queryUserProfile(@PathVariable("accountId") String accountId) {
+        return userService.queryUserProfile(accountId);
+    }
+
 }
 

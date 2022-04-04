@@ -1,4 +1,4 @@
-package com.vincent.external.user.model.response.profile;
+package com.vincent.api.user.model;
 
 import lombok.Data;
 

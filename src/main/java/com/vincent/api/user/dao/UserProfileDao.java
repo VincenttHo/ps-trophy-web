@@ -1,9 +1,8 @@
 package com.vincent.api.user.dao;
 
 import com.vincent.api.user.model.UserInfoDTO;
+import com.vincent.api.user.model.UserProfileDTO;
 import org.springframework.data.mongodb.repository.MongoRepository;
-
-import java.util.Optional;
 
 /**
  * Copyright (C) 2022 广东百慧科技有限公司
@@ -19,15 +18,6 @@ import java.util.Optional;
  * 2022-03-28    VincentHo       v1.0.0        create
  * @date 2022-03-28
  */
-public interface UserDao extends MongoRepository<UserInfoDTO, String> {
-
-    /**
-     * <p>findByOnlineId</p>
-     * @author VincentHo
-     * @date 2022/4/4
-     * @param onlineId
-     * @return com.vincent.api.user.model.UserInfoDTO
-     */
-    Optional<UserInfoDTO> findByOnlineId(String onlineId);
+public interface UserProfileDao extends MongoRepository<UserProfileDTO, String> {
 
 }

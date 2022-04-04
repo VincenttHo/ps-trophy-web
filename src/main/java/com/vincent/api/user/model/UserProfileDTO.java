@@ -1,15 +1,14 @@
-package com.vincent.external.user.model.response.profile;
+package com.vincent.api.user.model;
 
-import com.vincent.api.user.model.UserAvatar;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
 /**
- * Copyright (C) 2022 广东百慧科技有限公司
- *
- * <p>在这里说明当前类/接口/枚举的业务用途</p>
+ * <p>用户简介信息</p>
  *
  * @author VincentHo
  * @version 1.0.0
@@ -17,12 +16,17 @@ import java.util.List;
  * Modification History:
  * Date         Author      Version     Description
  * -----------------------------------------------------------------
- * 2022-03-26    VincentHo       v1.0.0        create
- * @date 2022-03-26
+ * 2022-04-04    VincentHo       v1.0.0        create
+ * @date 2022-04-04
  */
 @Data
-@ToString
-public class UserProfileResponse {
+@Document("userProfile")
+@Schema(title = "用户简介", description = "用户简介")
+public class UserProfileDTO {
+
+    /** 账号id */
+    @Id
+    private String accountId;
 
     /** 用户名 */
     private String onlineId;

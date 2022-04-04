@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * Copyright (C) 2022 广东百慧科技有限公司
@@ -20,10 +21,12 @@ import org.springframework.data.annotation.Id;
  * @date 2022-03-17
  */
 @Data
+@Document("userInfo")
 @Schema(title = "用户信息", description = "用户信息")
 public class UserInfoDTO {
 
     /** 账号id */
+    @Id
     @Schema(title = "accountId")
     private String accountId;
 
@@ -32,7 +35,6 @@ public class UserInfoDTO {
     private String country;
 
     /** 用户名 */
-    @Id
     @Schema(title = "onlineId")
     private String onlineId;
 
@@ -67,10 +69,5 @@ public class UserInfoDTO {
     /** relationshipState */
     @Schema(title = "relationshipState")
     private String relationshipState;
-
-    /** 简介 */
-    @Schema(title = "aboutMe")
-    private String aboutMe;
-
 
 }
