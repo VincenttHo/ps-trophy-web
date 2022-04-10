@@ -62,6 +62,8 @@ public class InfoUpdateService {
 
         trophyService.updateTrophyTitles(psnId);
 
+        trophyService.removeUserTrophy(psnId);
+
     }
 
 }

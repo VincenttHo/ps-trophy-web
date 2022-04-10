@@ -2,19 +2,21 @@ package com.vincent.api.trophy.service;
 
 import com.vincent.api.trophy.dao.TrophySummaryDao;
 import com.vincent.api.trophy.dao.TrophyTitleDao;
+import com.vincent.api.trophy.dao.UserTrophyDao;
+import com.vincent.api.trophy.model.Trophy;
+import com.vincent.api.trophy.model.UserTrophyDetailDTO;
 import com.vincent.api.trophy.model.TrophySummaryDTO;
 import com.vincent.api.trophy.model.TrophyTitleDTO;
 import com.vincent.api.user.model.UserInfoDTO;
 import com.vincent.api.user.service.UserService;
 import com.vincent.external.trophy.api.TrophyApi;
+import com.vincent.external.trophy.model.TrophyDetailResponse;
 import com.vincent.external.trophy.model.TrophyListResponse;
 import com.vincent.external.trophy.model.TrophySummaryResponse;
 import com.vincent.external.trophy.model.TrophyTitleResponse;
-import org.bson.codecs.UuidCodec;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -22,10 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -53,6 +54,9 @@ public class TrophyService {
 
     @Autowired
     private TrophyTitleDao trophyTitleDao;
+
+    @Autowired
+    private UserTrophyDao userTrophyDao;
 
     @Autowired
     private UserService userService;
@@ -156,6 +160,60 @@ public class TrophyService {
                 trophyTitleDao.saveAll(result);
             }
         }
+        return result;
+
+    }
+
+    /**
+     * 清理用户获取的奖杯信息
+     * @param psnId
+     */
+    public void removeUserTrophy(String psnId) {
+        userTrophyDao.deleteByPsnId(psnId);
+    }
+
+    /**
+     * 获取用户奖杯信息
+     * @return
+     */
+    public UserTrophyDetailDTO getUserTrophies(String psnId, String gameId) {
+
+        UserInfoDTO userInfo = userService.queryUserInfo(psnId);
+        String accountId = userInfo.getAccountId();
+
+        // 优先数据库取
+        UserTrophyDetailDTO result = userTrophyDao.findByPsnIdAndGameId(psnId, gameId);
+
+        if(result == null) {
+
+            result = new UserTrophyDetailDTO();
+
+            TrophyDetailResponse trophyDetails = trophyApi.getTrophyDetails(gameId);
+
+            TrophyDetailResponse userTrophyDetails = trophyApi.getUserTrophyDetails(accountId, gameId);
+
+            List<Trophy> trophies = trophyDetails.getTrophies();
+            Map<String, List<Trophy>> trophyMap = trophies.stream().collect(Collectors.groupingBy(Trophy::getTrophyId));
+
+            List<Trophy> userTrophies = userTrophyDetails.getTrophies();
+            userTrophies.stream().forEach(userTrophy -> {
+                Trophy trophy = trophyMap.get(userTrophy.getTrophyId()).get(0);
+                trophy.setEarned(userTrophy.getEarned());
+                trophy.setTrophyRare(userTrophy.getTrophyRare());
+                trophy.setTrophyEarnedRate(userTrophy.getTrophyEarnedRate());
+            });
+
+            result.setId(psnId + "_" + gameId);
+            result.setPsnId(psnId);
+            result.setAccountId(accountId);
+            result.setGameId(gameId);
+            result.setLastUpdatedDateTime(userTrophyDetails.getLastUpdatedDateTime());
+            result.setTrophies(trophies);
+
+            userTrophyDao.save(result);
+
+        }
+
         return result;
 
     }

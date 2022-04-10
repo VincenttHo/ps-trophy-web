@@ -2,6 +2,7 @@ package com.vincent.api.user.controller;
 
 import com.vincent.api.user.model.*;
 import com.vincent.api.user.service.UserService;
+import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 2022-03-17    VincentHo       v1.0.0        create
  * @date 2022-03-17
  */
-@Tag(name = "用户接口")
+@Api(value = "用户接口", tags = "用户接口")
 @RestController
 @RequestMapping("/user")
 @Slf4j

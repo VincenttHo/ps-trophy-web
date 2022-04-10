@@ -43,6 +43,9 @@ public class TrophyApi {
     @Value("${psn.api.trophy.url.trophy-details}")
     private String trophyDetailUrl;
 
+    @Value("${psn.api.trophy.url.trophy-player-earned}")
+    private String userTrophyDetailUrl;
+
     @Autowired
     private AuthApi authApi;
 
@@ -96,6 +99,24 @@ public class TrophyApi {
         headers.put("Content-Type", MediaType.APPLICATION_JSON_VALUE);
 
         String url = String.format(trophyDetailUrl, gameId);
+
+        return HttpUtils.doGet(url, headers, TrophyDetailResponse.class);
+
+    }
+
+    /**
+     * <p>获取用户得到的奖杯详情</p>
+     * @author VincentHo
+     * @date 2022/4/9
+     * @param accountId
+     * @param gameId
+     * @return com.vincent.external.trophy.model.TrophyDetailResponse
+     */
+    public TrophyDetailResponse getUserTrophyDetails(String accountId, String gameId) {
+        Map<String, String> headers = authApi.getTokenAndFillHeaders();
+        headers.put("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+
+        String url = String.format(userTrophyDetailUrl, accountId, gameId);
 
         return HttpUtils.doGet(url, headers, TrophyDetailResponse.class);
 
