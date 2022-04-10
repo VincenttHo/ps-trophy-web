@@ -22,6 +22,6 @@ import java.util.List;
 public class TrophyListResponse {
 
     /** 结果列表 */
-    private List<TrophyTitle> trophyTitles;
+    private List<TrophyTitleResponse> trophyTitles;
 
 }

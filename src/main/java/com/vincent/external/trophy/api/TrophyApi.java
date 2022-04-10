@@ -1,6 +1,10 @@
 package com.vincent.external.trophy.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vincent.external.auth.api.AuthApi;
+import com.vincent.external.trophy.model.TrophyDetailResponse;
 import com.vincent.external.trophy.model.TrophyListResponse;
 import com.vincent.external.trophy.model.TrophySummaryResponse;
 import com.vincent.utils.HttpUtils;
@@ -8,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -28,11 +34,14 @@ import java.util.Map;
 @Service
 public class TrophyApi {
 
-    @Value("${psn.api.url.trophy-summary:https://m.np.playstation.net/api/trophy/v1/users/%s/trophySummary}")
+    @Value("${psn.api.trophy.url.trophy-summary}")
     private String trophySummaryApiUrl;
 
-    @Value("${psn.api.url.trophy-list:https://m.np.playstation.net/api/trophy/v1/users/%s/trophyTitles}")
+    @Value("${psn.api.trophy.url.trophy-list}")
     private String trophyListApiUrl;
+
+    @Value("${psn.api.trophy.url.trophy-details}")
+    private String trophyDetailUrl;
 
     @Autowired
     private AuthApi authApi;
@@ -72,6 +81,23 @@ public class TrophyApi {
         String url = String.format(trophyListApiUrl, accountId);
 
         return HttpUtils.doGet(url, headers, TrophyListResponse.class);
+
+    }
+
+    /**
+     * <p>获取奖杯详情</p>
+     * @author VincentHo
+     * @date 2022/4/9
+     * @param gameId
+     * @return com.vincent.external.trophy.model.TrophyDetailResponse
+     */
+    public TrophyDetailResponse getTrophyDetails(String gameId) {
+        Map<String, String> headers = authApi.getTokenAndFillHeaders();
+        headers.put("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+
+        String url = String.format(trophyDetailUrl, gameId);
+
+        return HttpUtils.doGet(url, headers, TrophyDetailResponse.class);
 
     }
 

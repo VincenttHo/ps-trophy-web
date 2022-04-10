@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,12 +32,12 @@ import java.util.Map;
  */
 @Slf4j
 @Service
-public class UserInfoApi {
+public class UserApi {
 
-    @Value("${psn.api.url.search-user:https://m.np.playstation.net/api/search/v1/universalSearch}")
+    @Value("${psn.api.user.url.search-user}")
     private String searchUserApiUrl;
 
-    @Value("${psn.api.url.search-user:https://m.np.playstation.net/api/userProfile/v1/internal/users/%s/profiles}")
+    @Value("${psn.api.user.url.user-profile}")
     private String userProfileApiUrl;
 
     @Autowired
@@ -53,12 +54,14 @@ public class UserInfoApi {
 
         UserSearchResponse userSearchResponse = HttpUtils.doPost(searchUserApiUrl, headers, requestJson, UserSearchResponse.class);
         log.info("获取用户信息，出参：{}", userSearchResponse.toString());
-        UserInfoResponse result = null;
-        if(userSearchResponse != null) {
-            result = userSearchResponse.getDomainResponses().get(0).getResults().get(0).getSocialMetadata();
-        }
 
-        return result;
+        Assert.notNull(userSearchResponse, "未找到您的用户信息，请退出重新输入psnId重试");
+
+        try {
+            return userSearchResponse.getDomainResponses().get(0).getResults().get(0).getSocialMetadata();
+        } catch (Exception e) {
+            throw new RuntimeException("未找到您的用户信息，请退出重新输入psnId重试");
+        }
 
     }
 
@@ -78,6 +81,8 @@ public class UserInfoApi {
         headers.put("Content-Type", MediaType.APPLICATION_JSON_VALUE);
 
         UserProfileResponse userProfileResponse = HttpUtils.doGet(url, headers, UserProfileResponse.class);
+
+        Assert.notNull(userProfileResponse, "未找到您的用户信息，请退出重新输入psnId重试");
 
         log.info("获取用户简介信息成功：{}", userProfileResponse);
 

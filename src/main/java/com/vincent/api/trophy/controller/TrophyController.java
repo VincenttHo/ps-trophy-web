@@ -1,16 +1,16 @@
 package com.vincent.api.trophy.controller;
 
 import com.vincent.api.trophy.model.TrophySummaryDTO;
+import com.vincent.api.trophy.model.TrophyTitleDTO;
 import com.vincent.api.trophy.service.TrophyService;
 import com.vincent.external.trophy.model.TrophySummaryResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Copyright (C) 2022 广东百慧科技有限公司
@@ -35,10 +35,17 @@ public class TrophyController {
     @Autowired
     private TrophyService trophyService;
 
-    @GetMapping("/summary/{accountId}")
-    public TrophySummaryDTO getTrophySummary(@PathVariable("accountId") String accountId) {
+    @GetMapping("/summary/{psnId}")
+    public TrophySummaryDTO getTrophySummary(@PathVariable("psnId") String psnId) {
+        return trophyService.getTrophySummary(psnId);
+    }
 
-        return trophyService.getTrophySummary(accountId);
+    @GetMapping("/titles/{psnId}")
+    public List<TrophyTitleDTO> getTrophyTitles(@PathVariable("psnId") String psnId,
+                                                @RequestParam("gameName") String gameName,
+                                                @RequestParam("currentPage") Integer currentPage,
+                                                @RequestParam("pageSize") Integer pageSize) {
+        return trophyService.getTrophyTitles(psnId, gameName, currentPage, pageSize);
 
     }
 

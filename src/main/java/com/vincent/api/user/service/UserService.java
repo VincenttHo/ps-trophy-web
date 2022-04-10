@@ -3,16 +3,15 @@ package com.vincent.api.user.service;
 import com.vincent.api.user.dao.UserDao;
 import com.vincent.api.user.dao.UserProfileDao;
 import com.vincent.api.user.model.UserInfoDTO;
+import com.vincent.external.user.api.UserApi;
 import com.vincent.api.user.model.UserProfileDTO;
-import com.vincent.external.user.api.UserInfoApi;
 import com.vincent.external.user.model.response.info.UserInfoResponse;
 import com.vincent.external.user.model.response.profile.UserProfileResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 
 /**
  * Copyright (C) 2022 广东百慧科技有限公司
@@ -32,7 +31,7 @@ import java.util.Optional;
 public class UserService {
 
     @Autowired
-    private UserInfoApi userInfoApi;
+    private UserApi userInfoApi;
 
     @Autowired
     private UserDao userDao;
@@ -49,7 +48,7 @@ public class UserService {
      */
     public UserInfoDTO queryUserInfo(String psnId) {
 
-        return userDao.findByOnlineId(psnId).orElseGet(() -> getUserInfoByApi(psnId));
+        return userDao.findByOnlineId(psnId).orElseGet(() -> updateUserInfo(psnId));
 
     }
 
@@ -60,7 +59,8 @@ public class UserService {
      * @param psnId
      * @return com.vincent.api.user.model.UserInfoDTO
      */
-    private UserInfoDTO getUserInfoByApi(String psnId) {
+    @Transactional(rollbackFor = Exception.class)
+    public UserInfoDTO updateUserInfo(String psnId) {
         UserInfoResponse userInfoResponse = userInfoApi.getUserInfo(psnId);
 
         UserInfoDTO result = new UserInfoDTO();
@@ -74,12 +74,12 @@ public class UserService {
      * <p>查询用户简介信息</p>
      * @author VincentHo
      * @date 2022/4/4
-     * @param accountId
+     * @param psnId
      * @return com.vincent.api.user.model.UserProfileDTO
      */
-    public UserProfileDTO queryUserProfile(String accountId) {
+    public UserProfileDTO queryUserProfile(String psnId) {
 
-        return userProfileDao.findById(accountId).orElseGet(() -> this.getUserProfileByApi(accountId));
+        return userProfileDao.findById(psnId).orElseGet(() -> this.updateUserProfile(psnId));
 
     }
 
@@ -87,10 +87,16 @@ public class UserService {
      * <p>通过api获取用户简介信息</p>
      * @author VincentHo
      * @date 2022/4/4
-     * @param accountId
+     * @param psnId
      * @return com.vincent.api.user.model.UserProfileDTO
      */
-    private UserProfileDTO getUserProfileByApi(String accountId) {
+    @Transactional(rollbackFor = Exception.class)
+    public UserProfileDTO updateUserProfile(String psnId) {
+
+        // ps的接口是通过accountId获取的，这里通过psnId转一层变成accountId获取
+        UserInfoDTO userInfoDTO = this.queryUserInfo(psnId);
+        String accountId = userInfoDTO.getAccountId();
+
         UserProfileResponse userProfileResponse = userInfoApi.getUserProfile(accountId);
         UserProfileDTO result = new UserProfileDTO();
         result.setAccountId(accountId);

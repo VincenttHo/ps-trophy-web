@@ -25,10 +25,10 @@ import java.util.List;
 public class UserProfileDTO {
 
     /** 账号id */
-    @Id
     private String accountId;
 
     /** 用户名 */
+    @Id
     private String onlineId;
 
     /** 简介 */

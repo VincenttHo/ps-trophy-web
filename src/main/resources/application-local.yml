@@ -1,0 +1,26 @@
+psn:
+  api:
+    auth:
+      npsso: UAIKPyMYcRKww4MfK1WQQxfUG3i80ZmMfUeT2NLCiAPCJqED0HpYLzA0K1kbYAPP
+      url:
+        # 获取授权码
+        auth-code: https://ca.account.sony.com/api/authz/v3/oauth/authorize?access_type=offline&client_id=ac8d161a-d966-4728-b0ea-ffec22f69edc&redirect_uri=com.playstation.PlayStationApp%3A%2F%2Fredirect&response_type=code&scope=psn%3Amobile.v1%20psn%3Aclientapp
+        # 获取token
+        token: https://ca.account.sony.com/api/authz/v3/oauth/token
+    trophy:
+      url:
+        # 奖杯汇总
+        trophy-summary: https://m.np.playstation.net/api/trophy/v1/users/%s/trophySummary
+        # 奖杯列表
+        trophy-list: https://m.np.playstation.net/api/trophy/v1/users/%s/trophyTitles
+        # 游戏所有奖杯
+        trophy-details: https://m.np.playstation.net/api/trophy/v1/npCommunicationIds/%s/trophyGroups/all/trophies
+        # 用户的某游戏获得的奖杯
+        trophy-player-earned: https://m.np.playstation.net/api/trophy/v1/users/%s/npCommunicationIds/%s/trophyGroups/all/trophies
+    user:
+      url:
+        # 用户查询
+        search-user: https://m.np.playstation.net/api/search/v1/universalSearch
+        # 用户简介
+        user-profile: https://m.np.playstation.net/api/userProfile/v1/internal/users/%s/profiles
+

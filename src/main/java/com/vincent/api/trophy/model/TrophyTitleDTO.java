@@ -1,6 +1,8 @@
-package com.vincent.external.trophy.model;
+package com.vincent.api.trophy.model;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
@@ -19,7 +21,15 @@ import java.util.Date;
  * @date 2022-03-26
  */
 @Data
-public class TrophyTitle {
+@Document("trophyTitle")
+public class TrophyTitleDTO {
+
+    @Id
+    private String id;
+
+    private String psnId;
+
+    private String accountId;
 
     /** npServiceName */
     private String npServiceName;
